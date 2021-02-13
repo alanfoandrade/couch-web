@@ -79,11 +79,11 @@ const SignUp: React.FC = () => {
             <div className="button-icon">
               <FiLogIn size={24} color="#fff" />
             </div>
-            <div className="button-text">Cadastrar</div>
+            <span>Cadastrar</span>
           </button>
 
           <Link to="/">
-            <div className="button-text">Voltar para o login</div>
+            <span>Voltar para o login</span>
           </Link>
         </ButtonsWrapper>
       </Form>

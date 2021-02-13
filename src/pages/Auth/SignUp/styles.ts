@@ -2,7 +2,8 @@ import { shade } from 'polished';
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  min-width: 1064px;
+  height: 100%;
+  min-width: 1016px;
   max-width: 1200px;
   background: #f0f0f7;
   border-radius: 4px;
@@ -17,7 +18,8 @@ export const Header = styled.header`
   justify-content: space-between;
 
   > div {
-    min-width: 512px;
+    min-width: 480px;
+    max-width: 600px;
 
     h1 {
       font-size: 32px;
@@ -35,8 +37,8 @@ export const Header = styled.header`
   }
 
   img {
-    height: 225px;
-    width: 400px;
+    height: 230px;
+    width: 350px;
     border-radius: 4px;
     margin-left: 16px;
   }
@@ -44,7 +46,6 @@ export const Header = styled.header`
 
 export const Form = styled.form`
   width: 50%;
-  margin-top: 24px;
 
   div.form-input {
     display: flex;
@@ -102,7 +103,7 @@ export const ButtonsWrapper = styled.div`
       margin-right: 16px;
     }
 
-    div.button-text {
+    span {
       flex: 1;
     }
   }
@@ -119,8 +120,9 @@ export const ButtonsWrapper = styled.div`
       color: ${shade(0.3, '#3482cb')};
     }
 
-    div.button-text {
-      text-align: center;
+    span {
+      display: flex;
+      justify-content: center;
     }
   }
 `;
