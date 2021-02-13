@@ -1,32 +1,35 @@
 import React, { FormEvent, useCallback, useState } from 'react';
 import { FiLogIn } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { ButtonsWrapper, Container, Form, Header } from './styles';
 
-import frogImg from '../../../assets/frog.png';
+import couchImg from '../../../assets/couch_image.png';
+import api from '../../../apis/api';
 
-import { useAuth } from '../../../hooks/auth';
+const SignUp: React.FC = () => {
+  const { goBack } = useHistory();
 
-const SignIn: React.FC = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const { signIn } = useAuth();
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
 
       try {
-        await signIn({
+        await api.post('/users', {
+          name,
           email,
           password,
         });
+
+        goBack();
       } catch (err) {
-        alert('Falha na autenticação.');
+        alert('Falha no cadastro.');
       }
     },
-    [email, password, signIn],
+    [email, goBack, name, password],
   );
 
   return (
@@ -34,16 +37,22 @@ const SignIn: React.FC = () => {
       <Header>
         <div>
           <h1>Teste do sofá</h1>
-          <strong>Garantindo o seu conforto</strong>
-          <p>
-            Ajudamos pessoas a se sentirem confortáveis em seus momentos de
-            lazer e descanso.
-          </p>
+          <strong>Faça seu cadastro</strong>
+          <p>Cadastre-se e venha desfrutar do melhor conforto.</p>
         </div>
-        <img src={frogImg} alt="couch_image" />
+        <img src={couchImg} alt="couch_image" />
       </Header>
 
       <Form onSubmit={handleSubmit}>
+        <div className="form-input">
+          <label htmlFor="name">Nome</label>
+          <input
+            name="name"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
         <div className="form-input">
           <label htmlFor="email">E-mail</label>
           <input
@@ -70,14 +79,11 @@ const SignIn: React.FC = () => {
             <div className="button-icon">
               <FiLogIn size={24} color="#fff" />
             </div>
-            <div className="button-text">Entrar</div>
+            <div className="button-text">Cadastrar</div>
           </button>
 
-          <Link to="signup">
-            <div className="button-icon">
-              <FiLogIn size={24} color="#fff" />
-            </div>
-            <div className="button-text">Cadastrar</div>
+          <Link to="/">
+            <div className="button-text">Voltar para o login</div>
           </Link>
         </ButtonsWrapper>
       </Form>
@@ -85,4 +91,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

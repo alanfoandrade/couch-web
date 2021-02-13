@@ -25,12 +25,23 @@
     "prettier"
   ],
   "rules": {
+    "no-alert": "off" ,
     "prettier/prettier": "error",
     "no-use-before-define": "off",
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "labelComponents": [],
+        "labelAttributes": [],
+        "controlComponents": [],
+        "assert": "htmlFor",
+        "depth": 25
+      }
+    ],
     "react/jsx-filename-extension": [
       1,
       {

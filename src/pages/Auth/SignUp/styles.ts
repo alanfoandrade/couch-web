@@ -2,8 +2,7 @@ import { shade } from 'polished';
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  height: 100%;
-  min-width: 1016px;
+  min-width: 1064px;
   max-width: 1200px;
   background: #f0f0f7;
   border-radius: 4px;
@@ -19,7 +18,6 @@ export const Header = styled.header`
 
   > div {
     min-width: 512px;
-    max-width: 600px;
 
     h1 {
       font-size: 32px;
@@ -37,8 +35,8 @@ export const Header = styled.header`
   }
 
   img {
-    height: 230px;
-    width: 350px;
+    height: 225px;
+    width: 400px;
     border-radius: 4px;
     margin-left: 16px;
   }
@@ -46,7 +44,7 @@ export const Header = styled.header`
 
 export const Form = styled.form`
   width: 50%;
-  margin-top: 40px;
+  margin-top: 24px;
 
   div.form-input {
     display: flex;
@@ -73,7 +71,8 @@ export const Form = styled.form`
 
 export const ButtonsWrapper = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: center;
   margin-top: 24px;
 
   button {
@@ -109,37 +108,19 @@ export const ButtonsWrapper = styled.div`
   }
 
   a {
-    background: #3482cb;
+    color: #32264d;
     width: 200px;
-    color: #fff;
     font-size: 16px;
-    font-weight: 500;
-    display: flex;
-    padding-right: 16px;
-    align-items: center;
-    border-radius: 4px;
+    margin-top: 8px;
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: color 0.2s;
 
     &:hover {
-      background: ${shade(0.2, '#3482cb')};
-    }
-
-    div.button-icon {
-      height: 100%;
-      width: 56px;
-      display: flex;
-      border-radius: 4px 0 0 4px;
-      justify-content: center;
-      align-items: center;
-      padding: 8px;
-      background: rgba(0, 0, 0, 0.2);
-      margin-right: 16px;
+      color: ${shade(0.3, '#3482cb')};
     }
 
     div.button-text {
       text-align: center;
-      flex: 1;
     }
   }
 `;

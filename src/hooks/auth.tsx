@@ -29,8 +29,8 @@ const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<IAuthState>(() => {
-    const token = localStorage.getItem('@GoBarber:token');
-    const user = localStorage.getItem('@GoBarber:user');
+    const token = localStorage.getItem('@CouchTest:token');
+    const user = localStorage.getItem('@CouchTest:user');
 
     if (token && user) {
       api.defaults.headers.authorization = `Bearer ${token}`;
@@ -49,8 +49,8 @@ const AuthProvider: React.FC = ({ children }) => {
 
     const { token, user } = response.data;
 
-    localStorage.setItem('@GoBarber:token', token);
-    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+    localStorage.setItem('@CouchTest:token', token);
+    localStorage.setItem('@CouchTest:user', JSON.stringify(user));
 
     api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -58,14 +58,14 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@GoBarber:token');
-    localStorage.removeItem('@GoBarber:user');
+    localStorage.removeItem('@CouchTest:token');
+    localStorage.removeItem('@CouchTest:user');
 
     setData({} as IAuthState);
   }, []);
 
   const updateUser = useCallback((user: IUser) => {
-    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+    localStorage.setItem('@CouchTest:user', JSON.stringify(user));
 
     setData((prev) => ({
       token: prev.token,

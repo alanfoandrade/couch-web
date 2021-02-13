@@ -13,18 +13,24 @@ export default createGlobalStyle`
   }
 
   body {
-    background: linear-gradient(-45deg, #d1c454, #71cc8f);
+    background: #4f907a;
     -webkit-font-smoothing: antialiased !important;
   }
 
   body, input, button {
-    color: #222;
-    font-size: 16px;
-    font-family: 'Roboto Slab', serif;
+    color: #6A6180;
+    border: 0;
+    border-radius: 4px;
+    height: 72px;
+    font-size: 24px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
   }
 
   h1, h2, h3, h4, strong {
-    font-weight: 500;
+    color: #32264D;
+    font-weight: 700;
+    font-family: 'Archivo', sans-serif;
   }
 
   button {
