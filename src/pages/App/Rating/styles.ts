@@ -3,11 +3,7 @@ import { shade } from 'polished';
 import { Link } from 'react-router-dom';
 
 interface IHeaderOptionProps {
-  active: number;
-}
-
-interface IRatingButtonProps {
-  rated: boolean;
+  active: boolean;
 }
 
 export const Container = styled.div`
@@ -49,48 +45,4 @@ export const HeaderOption = styled(Link)<IHeaderOptionProps>`
   &:hover {
     color: ${shade(0.3, '#3482cb')};
   }
-`;
-
-export const Couch = styled.div`
-  background: #fff;
-  border-radius: 4px;
-  padding: 16px;
-  margin-top: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  div {
-    display: flex;
-    flex-direction: column;
-
-    img {
-      height: 104px;
-      width: 104px;
-      border-radius: 4px;
-    }
-  }
-
-  div.couch-info {
-    flex: 1;
-    margin-left: 64px;
-
-    strong {
-      color: #6a6180;
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-
-    span {
-      font-weight: 400;
-      font-size: 16px;
-    }
-  }
-`;
-
-export const RatingButton = styled.button<IRatingButtonProps>`
-  background: ${(props) => props.rated && '#34cb79'};
-  font-size: 14px;
-  width: 104px;
-  height: 32px;
 `;
