@@ -1,9 +1,14 @@
 import styled from 'styled-components';
 import { shade } from 'polished';
 import { Link } from 'react-router-dom';
+import { ButtonHTMLAttributes } from 'react';
 
 interface IHeaderOptionProps {
-  active: boolean;
+  active: number;
+}
+
+interface IRatingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  rated: boolean;
 }
 
 export const Container = styled.div`
@@ -22,6 +27,7 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #ddd;
+  margin-bottom: 16px;
 
   button {
     font-weight: 400;
@@ -45,4 +51,63 @@ export const HeaderOption = styled(Link)<IHeaderOptionProps>`
   &:hover {
     color: ${shade(0.3, '#3482cb')};
   }
+`;
+
+export const Couch = styled.div`
+  background: #fff;
+  border-radius: 4px;
+  padding: 16px;
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  div {
+    display: flex;
+    flex-direction: column;
+
+    img {
+      height: 240px;
+      width: 240px;
+      border-radius: 4px;
+    }
+    strong {
+      color: #6a6180;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+  }
+
+  div.couch-info {
+    flex: 1;
+    margin-left: 64px;
+
+    strong {
+      color: #6a6180;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    span {
+      font-weight: 400;
+      font-size: 16px;
+    }
+  }
+
+  div.approver-info {
+    margin-right: 48px;
+    text-align: center;
+
+    strong {
+      font-size: 20px;
+    }
+  }
+`;
+
+export const RatingButton = styled.button<IRatingButtonProps>`
+  background: ${(props) => props.rated && '#34cb79'};
+  font-size: 14px;
+  width: 104px;
+  height: 32px;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `;

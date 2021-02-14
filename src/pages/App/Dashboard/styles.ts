@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import { shade } from 'polished';
 import { Link } from 'react-router-dom';
+import { ButtonHTMLAttributes } from 'react';
 
 interface IHeaderOptionProps {
   active: number;
 }
 
-interface IRatingButtonProps {
+interface IRatingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rated: boolean;
 }
 
@@ -54,7 +55,7 @@ export const HeaderOption = styled(Link)<IHeaderOptionProps>`
 export const Couch = styled.div`
   background: #fff;
   border-radius: 4px;
-  padding: 16px;
+  padding: 32px;
   margin-top: 16px;
   display: flex;
   justify-content: space-between;
@@ -65,8 +66,8 @@ export const Couch = styled.div`
     flex-direction: column;
 
     img {
-      height: 104px;
-      width: 104px;
+      height: 240px;
+      width: 240px;
       border-radius: 4px;
     }
   }
@@ -91,6 +92,7 @@ export const Couch = styled.div`
 export const RatingButton = styled.button<IRatingButtonProps>`
   background: ${(props) => props.rated && '#34cb79'};
   font-size: 14px;
-  width: 104px;
-  height: 32px;
+  width: 160px;
+  margin-right: 32px;
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `;

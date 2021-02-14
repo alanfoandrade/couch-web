@@ -40,10 +40,11 @@ interface ICouch {
 const Dashboard: React.FC = () => {
   const { location } = useHistory();
 
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   const [ratings, setRatings] = useState<IRatingsApiResponse[]>([]);
   const [couchs, setCouchs] = useState<ICouch[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadRatings() {
@@ -78,29 +79,49 @@ const Dashboard: React.FC = () => {
   const handleRating = useCallback(
     async (couch: ICouch) => {
       if (!couch.rated) {
-        await api.post('/ratings', { couch_id: couch.id, rating: 10 });
+        try {
+          setLoading(true);
+          await api.post('/ratings', { couch_id: couch.id, rating: 10 });
 
-        setCouchs((prevState) =>
-          prevState.map((stateCouch) =>
-            stateCouch.id === couch.id ? { ...couch, rated: true } : stateCouch,
-          ),
-        );
+          setCouchs((prevState) =>
+            prevState.map((stateCouch) =>
+              stateCouch.id === couch.id
+                ? { ...couch, rated: true }
+                : stateCouch,
+            ),
+          );
+        } catch (err) {
+          alert('Falha ao atualizar availiação.');
+        } finally {
+          setLoading(false);
+        }
       } else {
-        const findRating = ratings.find(
-          (rating) => rating.couch_id === couch.id,
-        );
-        await api.delete(`/ratings/${findRating?.id}`);
+        try {
+          setLoading(true);
+          const findRating = ratings.find(
+            (rating) =>
+              rating.couch_id === couch.id && rating.user_id === user.id,
+          );
 
-        setCouchs((prevState) =>
-          prevState.map((stateCouch) =>
-            stateCouch.id === couch.id
-              ? { ...couch, rated: false }
-              : stateCouch,
-          ),
-        );
+          if (findRating) {
+            await api.delete(`/ratings/${findRating.id}`);
+          }
+
+          setCouchs((prevState) =>
+            prevState.map((stateCouch) =>
+              stateCouch.id === couch.id
+                ? { ...couch, rated: false }
+                : stateCouch,
+            ),
+          );
+        } catch (err) {
+          alert('Falha ao atualizar availiação.');
+        } finally {
+          setLoading(false);
+        }
       }
     },
-    [ratings],
+    [ratings, user.id],
   );
 
   return (
@@ -130,13 +151,6 @@ const Dashboard: React.FC = () => {
           <Couch key={couch.id}>
             <div>
               <img src={couch.urlImagem} alt="couch_image" />
-              <RatingButton
-                rated={couch.rated}
-                type="button"
-                onClick={() => handleRating(couch)}
-              >
-                Aprovado
-              </RatingButton>
             </div>
 
             <div className="couch-info">
@@ -146,6 +160,15 @@ const Dashboard: React.FC = () => {
               <span>{`Largura: ${couch.largura}m`}</span>
               <span>{`Altura: ${couch.altura}m`}</span>
             </div>
+
+            <RatingButton
+              disabled={loading}
+              rated={couch.rated}
+              type="button"
+              onClick={() => handleRating(couch)}
+            >
+              Aprovado
+            </RatingButton>
           </Couch>
         ))) || <LoadingPage />}
     </Container>
