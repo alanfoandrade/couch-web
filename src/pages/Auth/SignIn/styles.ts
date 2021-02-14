@@ -92,7 +92,7 @@ export const ButtonsWrapper = styled.div`
     }
 
     div.button-icon {
-      height: 100%;
+      height: 72px;
       width: 56px;
       display: flex;
       border-radius: 4px 0 0 4px;
