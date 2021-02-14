@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
+
+import { format, parseISO } from 'date-fns';
 import { useHistory } from 'react-router-dom';
+import { parse } from 'uuid';
 
 import api from '../../../apis/api';
 import couchApi from '../../../apis/couchApi';
@@ -27,13 +30,24 @@ interface ICouchApiResponse {
   comprimento: number;
 }
 
+interface ICouch {
+  id: string;
+  modelo: string;
+  urlImagem: string;
+  numeroDeAssentos: number;
+  largura: number;
+  altura: number;
+  comprimento: number;
+  rated_at?: string;
+}
+
 const Rating: React.FC = () => {
   const { location } = useHistory();
 
   const { signOut, user } = useAuth();
 
   const [ratings, setRatings] = useState<IRatingsApiResponse[]>([]);
-  const [couchs, setCouchs] = useState<ICouchApiResponse[]>([]);
+  const [couchs, setCouchs] = useState<ICouch[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -55,9 +69,24 @@ const Rating: React.FC = () => {
 
       const ratedCouchsId = ratings.map((rating) => rating.couch_id);
 
-      const parsedCouchs = data.filter((couch) =>
+      const filteredCouchs = data.filter((couch) =>
         ratedCouchsId.includes(couch.id),
       );
+
+      const ratedCouchs = filteredCouchs.map((couch) => ({
+        ...couch,
+        rating: ratings.find((rate) => rate.couch_id === couch.id),
+      }));
+
+      const parsedCouchs = ratedCouchs.map((ratedCouch) => ({
+        ...ratedCouch,
+        rated_at: ratedCouch.rating?.created_at
+          ? format(
+              parseISO(String(ratedCouch.rating.created_at)),
+              "dd/MM/yyyy 'às' HH:MM",
+            )
+          : undefined,
+      }));
 
       setCouchs(parsedCouchs);
     }
@@ -108,6 +137,7 @@ const Rating: React.FC = () => {
             <div className="approver-info">
               <strong>Avaliador:</strong>
               <strong>{user.name}</strong>
+              <span>{couch.rated_at}</span>
             </div>
           </Couch>
         ))) || <LoadingPage />}

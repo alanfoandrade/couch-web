@@ -101,6 +101,11 @@ export const Couch = styled.div`
     strong {
       font-size: 20px;
     }
+
+    span {
+      font-weight: 400;
+      font-size: 16px;
+    }
   }
 `;
 
