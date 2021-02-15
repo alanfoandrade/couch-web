@@ -92,6 +92,8 @@ export const Couch = styled.div`
 export const RatingButton = styled.button<IRatingButtonProps>`
   background: ${(props) =>
     props.rating === 1 ? '#34cb79' : props.rating === 2 && '#c53030'};
+  color: ${(props) =>
+    props.rating === 1 || props.rating === 2 ? '#fff' : '#6a6180'};
   font-size: 14px;
   width: 160px;
   margin-right: 32px;
