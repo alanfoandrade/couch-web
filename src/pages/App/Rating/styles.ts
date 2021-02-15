@@ -98,6 +98,16 @@ export const Couch = styled.div`
     margin-right: 48px;
     text-align: center;
 
+    h1 {
+      font-size: 32px;
+      margin-bottom: 16px;
+      color: #34cb79;
+    }
+
+    h1.disapproved {
+      color: #c53030;
+    }
+
     strong {
       font-size: 20px;
     }

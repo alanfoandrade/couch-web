@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import { format, parseISO } from 'date-fns';
 import { useHistory } from 'react-router-dom';
-import { parse } from 'uuid';
 
 import api from '../../../apis/api';
 import couchApi from '../../../apis/couchApi';
@@ -11,13 +10,19 @@ import { useAuth } from '../../../hooks/auth';
 
 import { Container, Couch, Header, HeaderOption } from './styles';
 
+interface IUser {
+  id: string;
+  name: string;
+  email: string;
+}
+
 interface IRatingsApiResponse {
   id: string;
   rating: number;
   user_id: string;
   couch_id: string;
-  created_at: Date;
   updated_at: Date;
+  user: IUser;
 }
 
 interface ICouchApiResponse {
@@ -39,6 +44,7 @@ interface ICouch {
   altura: number;
   comprimento: number;
   rated_at?: string;
+  rating?: IRatingsApiResponse;
 }
 
 const Rating: React.FC = () => {
@@ -67,22 +73,24 @@ const Rating: React.FC = () => {
     async function loadCouchs() {
       const { data } = await couchApi.get<ICouchApiResponse[]>('');
 
-      const ratedCouchsId = ratings.map((rating) => rating.couch_id);
+      const ratedCouchsId = ratings.map(
+        (rating) => rating.rating !== 0 && rating.couch_id,
+      );
 
       const filteredCouchs = data.filter((couch) =>
         ratedCouchsId.includes(couch.id),
       );
 
-      const ratedCouchs = filteredCouchs.map((couch) => ({
+      const couchsWithRating = filteredCouchs.map((couch) => ({
         ...couch,
-        rating: ratings.find((rate) => rate.couch_id === couch.id),
+        rating: ratings.find((rating) => rating.couch_id === couch.id),
       }));
 
-      const parsedCouchs = ratedCouchs.map((ratedCouch) => ({
+      const parsedCouchs = couchsWithRating.map((ratedCouch) => ({
         ...ratedCouch,
-        rated_at: ratedCouch.rating?.created_at
+        rated_at: ratedCouch.rating?.updated_at
           ? format(
-              parseISO(String(ratedCouch.rating.created_at)),
+              parseISO(String(ratedCouch.rating.updated_at)),
               "dd/MM/yyyy 'às' HH:MM",
             )
           : undefined,
@@ -117,7 +125,7 @@ const Rating: React.FC = () => {
         </button>
       </Header>
 
-      <strong className="rating-counter">{`Total de avaliações realizadas: ${ratings.length}`}</strong>
+      <strong className="rating-counter">{`Total de avaliações realizadas: ${couchs.length}`}</strong>
 
       {(!loading &&
         couchs.map((couch) => (
@@ -135,6 +143,10 @@ const Rating: React.FC = () => {
             </div>
 
             <div className="approver-info">
+              {couch.rating?.rating === 1 && <h1>Aprovado</h1>}
+              {couch.rating?.rating === 2 && (
+                <h1 className="disapproved">Reprovado</h1>
+              )}
               <strong>Avaliador:</strong>
               <strong>{user.name}</strong>
               <span>{couch.rated_at}</span>

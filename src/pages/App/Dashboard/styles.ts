@@ -8,7 +8,7 @@ interface IHeaderOptionProps {
 }
 
 interface IRatingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  rated: boolean;
+  rating: number;
 }
 
 export const Container = styled.div`
@@ -90,9 +90,14 @@ export const Couch = styled.div`
 `;
 
 export const RatingButton = styled.button<IRatingButtonProps>`
-  background: ${(props) => props.rated && '#34cb79'};
+  background: ${(props) =>
+    props.rating === 1 ? '#34cb79' : props.rating === 2 && '#c53030'};
   font-size: 14px;
   width: 160px;
   margin-right: 32px;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
+
+  & + button {
+    margin-top: 8px;
+  }
 `;

@@ -37,8 +37,8 @@ export const Header = styled.header`
   }
 
   img {
-    height: 230px;
-    width: 350px;
+    height: 263px;
+    width: 400px;
     border-radius: 4px;
     margin-left: 16px;
   }
