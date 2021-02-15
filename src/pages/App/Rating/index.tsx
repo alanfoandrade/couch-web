@@ -25,6 +25,11 @@ interface IRatingsApiResponse {
   user: IUser;
 }
 
+interface IRating extends IRatingsApiResponse {
+  rated_at?: string;
+  couch?: ICouchApiResponse;
+}
+
 interface ICouchApiResponse {
   id: string;
   modelo: string;
@@ -35,73 +40,48 @@ interface ICouchApiResponse {
   comprimento: number;
 }
 
-interface ICouch {
-  id: string;
-  modelo: string;
-  urlImagem: string;
-  numeroDeAssentos: number;
-  largura: number;
-  altura: number;
-  comprimento: number;
-  rated_at?: string;
-  rating?: IRatingsApiResponse;
-}
-
 const Rating: React.FC = () => {
   const { location } = useHistory();
 
-  const { signOut, user } = useAuth();
+  const { signOut } = useAuth();
 
-  const [ratings, setRatings] = useState<IRatingsApiResponse[]>([]);
-  const [couchs, setCouchs] = useState<ICouch[]>([]);
+  const [ratings, setRatings] = useState<IRating[]>([]);
+  const [couchs, setCouchs] = useState<ICouchApiResponse[]>([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    async function loadRatings() {
-      const { data } = await api.get<IRatingsApiResponse[]>('/ratings');
-
-      setRatings(data);
-    }
-
-    loadRatings();
-    setLoading(false);
-  }, []);
 
   useEffect(() => {
     setLoading(true);
     async function loadCouchs() {
       const { data } = await couchApi.get<ICouchApiResponse[]>('');
 
-      const ratedCouchsId = ratings.map(
-        (rating) => rating.rating !== 0 && rating.couch_id,
-      );
-
-      const filteredCouchs = data.filter((couch) =>
-        ratedCouchsId.includes(couch.id),
-      );
-
-      const couchsWithRating = filteredCouchs.map((couch) => ({
-        ...couch,
-        rating: ratings.find((rating) => rating.couch_id === couch.id),
-      }));
-
-      const parsedCouchs = couchsWithRating.map((ratedCouch) => ({
-        ...ratedCouch,
-        rated_at: ratedCouch.rating?.updated_at
-          ? format(
-              parseISO(String(ratedCouch.rating.updated_at)),
-              "dd/MM/yyyy 'às' HH:mm",
-            )
-          : undefined,
-      }));
-
-      setCouchs(parsedCouchs);
+      setCouchs(data);
     }
 
     loadCouchs();
     setLoading(false);
-  }, [ratings]);
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    async function loadRatings() {
+      const { data } = await api.get<IRatingsApiResponse[]>('/ratings');
+
+      const filteredRatings = data.filter((rating) => rating.rating !== 0);
+
+      const ratingsPopulated = filteredRatings.map((rating) => ({
+        ...rating,
+        couch: couchs.find((findCouch) => findCouch.id === rating.couch_id),
+        rated_at: rating.updated_at
+          ? format(parseISO(String(rating.updated_at)), "dd/MM/yyyy 'às' HH:mm")
+          : undefined,
+      }));
+
+      setRatings(ratingsPopulated);
+    }
+
+    loadRatings();
+    setLoading(false);
+  }, [couchs]);
 
   return (
     <Container>
@@ -125,31 +105,31 @@ const Rating: React.FC = () => {
         </button>
       </Header>
 
-      <strong className="rating-counter">{`Total de avaliações realizadas: ${couchs.length}`}</strong>
+      <strong className="rating-counter">{`Total de avaliações realizadas: ${ratings.length}`}</strong>
 
       {(!loading &&
-        couchs.map((couch) => (
-          <Couch key={couch.id}>
+        ratings.map((rating) => (
+          <Couch key={rating.id}>
             <div>
-              <img src={couch.urlImagem} alt="couch_image" />
+              <img src={rating.couch?.urlImagem} alt="couch_image" />
             </div>
 
             <div className="couch-info">
-              <strong>{couch.modelo}</strong>
-              <span>{`Assentos: ${couch.numeroDeAssentos}`}</span>
-              <span>{`Comprimento: ${couch.comprimento}m`}</span>
-              <span>{`Largura: ${couch.largura}m`}</span>
-              <span>{`Altura: ${couch.altura}m`}</span>
+              <strong>{rating.couch?.modelo}</strong>
+              <span>{`Assentos: ${rating.couch?.numeroDeAssentos}`}</span>
+              <span>{`Comprimento: ${rating.couch?.comprimento}m`}</span>
+              <span>{`Largura: ${rating.couch?.largura}m`}</span>
+              <span>{`Altura: ${rating.couch?.altura}m`}</span>
             </div>
 
             <div className="approver-info">
-              {couch.rating?.rating === 1 && <h1>Aprovado</h1>}
-              {couch.rating?.rating === 2 && (
+              {rating.rating === 1 && <h1>Aprovado</h1>}
+              {rating.rating === 2 && (
                 <h1 className="disapproved">Reprovado</h1>
               )}
               <strong>Avaliador:</strong>
-              <strong>{user.name}</strong>
-              <span>{couch.rated_at}</span>
+              <strong>{rating.user.name}</strong>
+              <span>{rating.rated_at}</span>
             </div>
           </Couch>
         ))) || <LoadingPage />}

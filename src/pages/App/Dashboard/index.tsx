@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
         rating: 1,
       });
 
-      setRatings((prevState) => [{ ...prevState, ...data }]);
+      setRatings((prevState) => [...prevState, { ...data }]);
     } else {
       const { data } = await api.put<IRatingsApiResponse>(
         `/ratings/${couch.rating.id}`,
@@ -105,6 +105,8 @@ const Dashboard: React.FC = () => {
     setLoading(false);
   }, []);
 
+  console.log(ratings);
+
   const handleDisapproved = useCallback(async (couch: ICouch) => {
     setLoading(true);
     if (!couch.rating) {
@@ -113,7 +115,7 @@ const Dashboard: React.FC = () => {
         rating: 2,
       });
 
-      setRatings((prevState) => [{ ...prevState, ...data }]);
+      setRatings((prevState) => [...prevState, { ...data }]);
     } else {
       const { data } = await api.put<IRatingsApiResponse>(
         `/ratings/${couch.rating.id}`,
