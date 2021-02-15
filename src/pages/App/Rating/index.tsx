@@ -91,7 +91,7 @@ const Rating: React.FC = () => {
         rated_at: ratedCouch.rating?.updated_at
           ? format(
               parseISO(String(ratedCouch.rating.updated_at)),
-              "dd/MM/yyyy 'às' HH:MM",
+              "dd/MM/yyyy 'às' HH:mm",
             )
           : undefined,
       }));
