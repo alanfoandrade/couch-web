@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-
+import React, { useCallback, useEffect, useState } from 'react';
 import { format, parseISO } from 'date-fns';
 import { useHistory } from 'react-router-dom';
 
@@ -8,7 +7,7 @@ import couchApi from '../../../apis/couchApi';
 import LoadingPage from '../../../components/LoadingPage';
 import { useAuth } from '../../../hooks/auth';
 
-import { Container, Couch, Header, HeaderOption } from './styles';
+import { Container, Couch, FilterButton, Header, HeaderOption } from './styles';
 
 interface IUser {
   id: string;
@@ -43,10 +42,12 @@ interface ICouchApiResponse {
 const Rating: React.FC = () => {
   const { location } = useHistory();
 
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   const [ratings, setRatings] = useState<IRating[]>([]);
+  const [unfilteredRatings, setUnfilteredRatings] = useState<IRating[]>([]);
   const [couchs, setCouchs] = useState<ICouchApiResponse[]>([]);
+  const [filtering, setFiltering] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -83,6 +84,20 @@ const Rating: React.FC = () => {
     setLoading(false);
   }, [couchs]);
 
+  const handleFilter = useCallback(() => {
+    setFiltering((prevState) => !prevState);
+
+    if (!filtering) {
+      setUnfilteredRatings(ratings);
+
+      setRatings((prevState) =>
+        prevState.filter((stateRating) => stateRating.user_id === user.id),
+      );
+    } else {
+      setRatings(unfilteredRatings);
+    }
+  }, [filtering, ratings, unfilteredRatings, user.id]);
+
   return (
     <Container>
       <Header>
@@ -97,7 +112,7 @@ const Rating: React.FC = () => {
             active={location.pathname === '/Rating' ? 1 : 0}
             to="/Rating"
           >
-            <span>Avaliações</span>
+            <span>Relatório</span>
           </HeaderOption>
         </div>
         <button type="button" onClick={() => signOut()}>
@@ -105,7 +120,16 @@ const Rating: React.FC = () => {
         </button>
       </Header>
 
-      <strong className="rating-counter">{`Total de avaliações realizadas: ${ratings.length}`}</strong>
+      <div>
+        <strong className="rating-counter">{`Total de avaliações realizadas: ${ratings.length}`}</strong>
+        <FilterButton
+          type="button"
+          active={filtering ? 1 : 0}
+          onClick={handleFilter}
+        >
+          Minhas avaliações
+        </FilterButton>
+      </div>
 
       {(!loading &&
         ratings.map((rating) => (

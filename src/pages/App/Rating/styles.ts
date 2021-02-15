@@ -7,8 +7,8 @@ interface IHeaderOptionProps {
   active: number;
 }
 
-interface IRatingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  rated: boolean;
+interface IFilterButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  active: number;
 }
 
 export const Container = styled.div`
@@ -20,6 +20,22 @@ export const Container = styled.div`
   padding: 70px;
   box-shadow: 0 0 20px rgbta(0, 0, 0, 0.1);
   margin: 80px auto;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+`;
+
+export const FilterButton = styled.button<IFilterButtonProps>`
+  background: ${(props) => (props.active ? '#34cb79' : '#ddd')};
+  color: ${(props) => (props.active ? '#fff' : '#6a6180')};
+  font-size: 16px;
+  height: 40px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
 `;
 
 export const Header = styled.div`
@@ -30,6 +46,7 @@ export const Header = styled.div`
   margin-bottom: 16px;
 
   button {
+    background: transparent;
     font-weight: 400;
 
     &:hover {
@@ -118,12 +135,4 @@ export const Couch = styled.div`
       font-size: 16px;
     }
   }
-`;
-
-export const RatingButton = styled.button<IRatingButtonProps>`
-  background: ${(props) => props.rated && '#34cb79'};
-  font-size: 14px;
-  width: 104px;
-  height: 32px;
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
 `;

@@ -148,7 +148,7 @@ const Dashboard: React.FC = () => {
             active={location.pathname === '/Rating' ? 1 : 0}
             to="/Rating"
           >
-            <span>Avaliações</span>
+            <span>Relatório</span>
           </HeaderOption>
         </div>
         <button type="button" onClick={() => signOut()}>

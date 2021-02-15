@@ -29,6 +29,7 @@ export const Header = styled.div`
   border-bottom: 1px solid #ddd;
 
   button {
+    background: transparent;
     font-weight: 400;
 
     &:hover {
