@@ -97,6 +97,7 @@ export const Couch = styled.div`
   div.approver-info {
     margin-right: 48px;
     text-align: center;
+    min-width: 320px;
 
     h1 {
       font-size: 32px;
