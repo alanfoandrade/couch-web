@@ -105,8 +105,6 @@ const Dashboard: React.FC = () => {
     setLoading(false);
   }, []);
 
-  console.log(ratings);
-
   const handleDisapproved = useCallback(async (couch: ICouch) => {
     setLoading(true);
     if (!couch.rating) {
